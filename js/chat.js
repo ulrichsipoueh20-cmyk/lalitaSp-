@@ -21,6 +21,8 @@ async function getCurrentUser() {
 
     currentUser = data.user;
 
+    console.log("Utilisateur connecté :", currentUser.email);
+
     return currentUser;
 }
 
@@ -35,16 +37,27 @@ function displayMessage(message) {
 
     div.classList.add("message");
 
-    // Si le message appartient à l'utilisateur connecté
-    if (
-        currentUser &&
-        message.user_email &&
-        message.user_email.toLowerCase() === currentUser.email.toLowerCase()
-    ) {
+    const messageEmail = (message.user_email || "")
+        .trim()
+        .toLowerCase();
+
+    const currentEmail = (currentUser?.email || "")
+        .trim()
+        .toLowerCase();
+
+    console.log("Message :", message.message);
+    console.log("Email du message :", messageEmail);
+    console.log("Email connecté :", currentEmail);
+
+    // Message de la personne connectée → DROITE
+    if (messageEmail === currentEmail) {
 
         div.classList.add("me");
 
-    } else {
+    }
+
+    // Message de l'autre personne → GAUCHE
+    else {
 
         div.classList.add("other");
 
@@ -149,7 +162,7 @@ sendBtn.addEventListener(
 
 
 // ===============================
-// ENTRÉE CLAVIER
+// TOUCHE ENTRÉE
 // ===============================
 
 messageInput.addEventListener(
@@ -169,7 +182,7 @@ messageInput.addEventListener(
 
 
 // ===============================
-// MESSAGES EN TEMPS RÉEL
+// REALTIME
 // ===============================
 
 supabaseClient
@@ -213,7 +226,7 @@ logoutBtn.addEventListener(
 
 
 // ===============================
-// DÉMARRAGE DU CHAT
+// DÉMARRAGE
 // ===============================
 
 async function startChat() {
@@ -225,3 +238,5 @@ async function startChat() {
 }
 
 startChat();
+
+    
