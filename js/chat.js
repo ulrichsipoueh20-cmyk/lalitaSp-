@@ -1,103 +1,177 @@
-
 const messagesContainer = document.getElementById("messages");
 const messageInput = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
+let currentUser = null;
 
-// Afficher un message
-async function displayMessage(message) {
 
-    const { data: { user } } = await supabaseClient.auth.getUser();
+// ===============================
+// UTILISATEUR CONNECTÉ
+// ===============================
+
+async function getCurrentUser() {
+
+    const { data, error } = await supabaseClient.auth.getUser();
+
+    if (error || !data.user) {
+        console.error("Utilisateur non connecté :", error);
+        return null;
+    }
+
+    currentUser = data.user;
+
+    return currentUser;
+}
+
+
+// ===============================
+// AFFICHER UN MESSAGE
+// ===============================
+
+function displayMessage(message) {
 
     const div = document.createElement("div");
 
     div.classList.add("message");
 
-    // Vérifier si le message vient de l'utilisateur connecté
-    if (user && message.user_email === user.email) {
+    // Si le message appartient à l'utilisateur connecté
+    if (
+        currentUser &&
+        message.user_email &&
+        message.user_email.toLowerCase() === currentUser.email.toLowerCase()
+    ) {
+
         div.classList.add("me");
+
     } else {
+
         div.classList.add("other");
+
     }
 
     div.textContent = message.message;
 
     messagesContainer.appendChild(div);
 
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    messagesContainer.scrollTop =
+        messagesContainer.scrollHeight;
 }
 
 
-// Charger les messages existants
+// ===============================
+// CHARGER LES MESSAGES
+// ===============================
+
 async function loadMessages() {
 
     const { data, error } = await supabaseClient
         .from("messages")
         .select("*")
-        .order("created_at", { ascending: true });
+        .order("created_at", {
+            ascending: true
+        });
 
     if (error) {
-        console.error("Erreur chargement :", error);
+
+        console.error(
+            "Erreur chargement des messages :",
+            error
+        );
+
         return;
     }
 
     messagesContainer.innerHTML = "";
 
     data.forEach(message => {
+
         displayMessage(message);
+
     });
 }
 
 
-// Envoyer un message
+// ===============================
+// ENVOYER UN MESSAGE
+// ===============================
+
 async function sendMessage() {
 
     const text = messageInput.value.trim();
 
     if (!text) return;
 
-    const { data: { user }, error: authError } =
-        await supabaseClient.auth.getUser();
+    if (!currentUser) {
 
-    if (authError || !user) {
+        await getCurrentUser();
+
+    }
+
+    if (!currentUser) {
+
         console.error("Utilisateur non connecté");
+
         return;
     }
 
     const { error } = await supabaseClient
         .from("messages")
         .insert({
-            user_email: user.email,
+            user_email: currentUser.email,
             message: text
         });
 
     if (error) {
-        console.error("Erreur envoi :", error);
+
+        console.error(
+            "Erreur envoi du message :",
+            error
+        );
+
         return;
     }
 
     messageInput.value = "";
+
+    messageInput.focus();
 }
 
 
-// Bouton envoyer
-sendBtn.addEventListener("click", sendMessage);
+// ===============================
+// BOUTON ENVOYER
+// ===============================
+
+sendBtn.addEventListener(
+    "click",
+    sendMessage
+);
 
 
-// Touche Entrée
-messageInput.addEventListener("keydown", (e) => {
+// ===============================
+// ENTRÉE CLAVIER
+// ===============================
 
-    if (e.key === "Enter") {
+messageInput.addEventListener(
+    "keydown",
+    (e) => {
 
-        e.preventDefault();
+        if (e.key === "Enter") {
 
-        sendMessage();
+            e.preventDefault();
+
+            sendMessage();
+
+        }
+
     }
-});
+);
 
 
-// REALTIME
+// ===============================
+// MESSAGES EN TEMPS RÉEL
+// ===============================
+
 supabaseClient
     .channel("messages-realtime")
     .on(
@@ -109,22 +183,45 @@ supabaseClient
         },
         (payload) => {
 
-            console.log("Nouveau message :", payload.new);
+            console.log(
+                "Nouveau message :",
+                payload.new
+            );
 
             displayMessage(payload.new);
+
         }
     )
     .subscribe();
 
 
-// Déconnexion
-logoutBtn.addEventListener("click", async () => {
+// ===============================
+// DÉCONNEXION
+// ===============================
 
-    await supabaseClient.auth.signOut();
+logoutBtn.addEventListener(
+    "click",
+    async () => {
 
-    window.location.href = "index.html";
-});
+        await supabaseClient.auth.signOut();
+
+        window.location.href =
+            "index.html";
+
+    }
+);
 
 
-// Charger les messages au démarrage
-loadMessages();
+// ===============================
+// DÉMARRAGE DU CHAT
+// ===============================
+
+async function startChat() {
+
+    await getCurrentUser();
+
+    await loadMessages();
+
+}
+
+startChat();
