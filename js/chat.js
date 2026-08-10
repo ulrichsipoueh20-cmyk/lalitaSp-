@@ -311,6 +311,36 @@ div.appendChild(fileBox);
     div.appendChild(
         time
     );
+// ===============================
+// BOUTON SUPPRIMER
+// ===============================
+
+if (
+messageEmail === currentEmail
+) {
+
+const deleteBtn =
+    document.createElement("button");
+deleteBtn.className =
+    "delete-message-btn";
+deleteBtn.textContent =
+    "🗑️";
+deleteBtn.title =
+    "Supprimer";
+deleteBtn.addEventListener(
+    "click",
+    async (event) => {
+        event.stopPropagation();
+        await deleteMessage(
+            message
+        );
+    }
+);
+div.appendChild(
+    deleteBtn
+);
+
+}
     // ===============================
     // APPUI LONG MOBILE
     // ===============================
@@ -1098,6 +1128,60 @@ clearReply();
 console.log(
     "Message vocal envoyé avec succès."
 );
+
+}
+// ===============================
+// SUPPRIMER UN MESSAGE
+// ===============================
+
+async function deleteMessage(message) {
+
+if (!confirm("Supprimer ce message ?")) {
+    return;
+}
+// ===============================
+// SUPPRIMER LE FICHIER DU STORAGE
+// ===============================
+if (message.media_url) {
+    const { error: storageError } =
+        await supabaseClient
+        .storage
+        .from("chat-media")
+        .remove([
+            message.media_url
+        ]);
+    if (storageError) {
+        console.error(
+            "Erreur suppression fichier :",
+            storageError
+        );
+    }
+}
+// ===============================
+// SUPPRIMER LE MESSAGE
+// ===============================
+const { error } =
+    await supabaseClient
+    .from("messages")
+    .delete()
+    .eq(
+        "id",
+        message.id
+    );
+if (error) {
+    console.error(
+        "Erreur suppression message :",
+        error
+    );
+    alert(
+        "Impossible de supprimer le message."
+    );
+    return;
+}
+// ===============================
+// ACTUALISER LE CHAT
+// ===============================
+await loadMessages();
 
 }
 // ===============================
