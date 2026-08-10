@@ -1,4 +1,84 @@
 
+/* ===============================
+FICHIERS
+================================ */
+/* ===============================
+PHOTOS DANS LE CHAT
+================================ */
+
+.chat-media-image {
+display: block;
+width: auto;
+max-width: 260px;
+max-height: 320px;
+height: auto;
+
+object-fit: cover;
+border-radius: 16px;
+margin: 2px 0;
+cursor: pointer;
+box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.25);
+
+}
+
+/* Photos envoyées par moi */
+.message.me .chat-media-image {
+border-bottom-right-radius: 5px;
+}
+
+/* Photos reçues */
+.message.other .chat-media-image {
+border-bottom-left-radius: 5px;
+}
+
+/* Sur petit écran */
+@media (max-width: 480px) {
+
+.chat-media-image {
+    max-width: 230px;
+    max-height: 300px;
+    border-radius: 15px;
+}
+
+}
+.chat-file-box {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 10px 12px;
+border-radius: 12px;
+max-width: 260px;
+margin-top: 4px;
+}
+
+.chat-file-icon {
+font-size: 30px;
+flex-shrink: 0;
+}
+
+.chat-file-info {
+min-width: 0;
+}
+
+.chat-file-name {
+font-size: 14px;
+font-weight: bold;
+word-break: break-word;
+margin-bottom: 5px;
+}
+
+.chat-file-open {
+font-size: 13px;
+text-decoration: none;
+color: inherit;
+opacity: 0.85;
+}
+
+.chat-file-open:hover {
+opacity: 1;
+text-decoration: underline;
+}
 
 #replyBox {
     width: 100%;
