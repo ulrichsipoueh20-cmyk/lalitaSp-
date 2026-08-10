@@ -78,16 +78,26 @@
             <input
                 type="file"
                 id="mediaInput"
-                accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
+                accept=“image/,video/,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar”
                 hidden>
             <!-- BOUTON MÉDIA -->
-            <button
-                type="button"
-                id="mediaBtn"
-                class="media-btn"
-                aria-label="Envoyer un média">
-                📎
-            </button>
+<!-- INPUT PHOTO / VIDÉO -->
+<input
+    type="file"
+    id="photoInput"
+    accept="image/*,video/*"
+    hidden>
+
+<!-- BOUTON PHOTO -->
+<button
+    type="button"
+    id="photoBtn"
+    class="media-btn"
+    aria-label="Envoyer une photo ou une vidéo">
+    📷
+</button>
+
+         
             <!-- CHAMP MESSAGE -->
             <input
                 type="text"
