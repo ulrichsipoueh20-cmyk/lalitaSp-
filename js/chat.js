@@ -1,3 +1,6 @@
+const photoInput = document.getElementById("photoInput");
+const photoBtn = document.getElementById("photoBtn");
+
 const messagesContainer = document.getElementById("messages");
 const messageInput = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
@@ -188,25 +191,86 @@ async function displayMessage(message) {
             // ===============================
             // AUTRE FICHIER
             // ===============================
-            else {
-                const file =
-                    document.createElement(
-                        "a"
-                    );
-                file.href =
-                    mediaUrl;
-                file.target =
-                    "_blank";
-                file.rel =
-                    "noopener noreferrer";
-                file.className =
-                    "chat-file";
-                file.textContent =
-                    "📎 Ouvrir le fichier";
-                div.appendChild(
-                    file
-                );
-            }
+ // ===============================
+// AUTRE FICHIER
+// ===============================
+else {
+
+const fileBox =
+    document.createElement("div");
+fileBox.className =
+    "chat-file-box";
+// ===============================
+// NOM DU FICHIER
+// ===============================
+const fileName =
+    message.media_url
+        .split("/")
+        .pop();
+// ===============================
+// ICÔNE
+// ===============================
+let icon = "📎";
+if (mediaType.includes("pdf")) {
+    icon = "📕";
+} else if (
+    mediaType.includes("word") ||
+    mediaType.includes("document")
+) {
+    icon = "📝";
+} else if (
+    mediaType.includes("excel") ||
+    mediaType.includes("spreadsheet")
+) {
+    icon = "📊";
+} else if (
+    mediaType.includes("powerpoint") ||
+    mediaType.includes("presentation")
+) {
+    icon = "📽️";
+} else if (
+    mediaType.includes("zip") ||
+    mediaType.includes("rar")
+) {
+    icon = "📦";
+} else if (
+    mediaType.includes("text")
+) {
+    icon = "📃";
+}
+// ===============================
+// INFORMATIONS
+// ===============================
+const info =
+    document.createElement("div");
+info.className =
+    "chat-file-info";
+const name =
+    document.createElement("div");
+name.className =
+    "chat-file-name";
+name.textContent =
+    fileName;
+const open =
+    document.createElement("a");
+open.href =
+    mediaUrl;
+open.target =
+    "_blank";
+open.rel =
+    "noopener noreferrer";
+open.className =
+    "chat-file-open";
+open.textContent =
+    "⬇️ Ouvrir le fichier";
+info.appendChild(name);
+info.appendChild(open);
+fileBox.innerHTML =
+    `<div class="chat-file-icon">${icon}</div>`;
+fileBox.appendChild(info);
+div.appendChild(fileBox);
+
+}
         }
     }
     // ===============================
@@ -389,6 +453,174 @@ if (mediaBtn && mediaInput) {
         "click",
         () => {
             mediaInput.click();
+        }
+    );
+}
+// ===============================
+// BOUTON PHOTO / VIDÉO
+// ===============================
+
+if (photoBtn && photoInput) {
+
+    photoBtn.addEventListener(
+        "click",
+        () => {
+            photoInput.click();
+        }
+    );
+}
+// ===============================
+// SÉLECTION PHOTO / VIDÉO
+// ===============================
+
+if (photoInput) {
+
+    photoInput.addEventListener(
+        "change",
+        async () => {
+
+            const file =
+                photoInput.files[0];
+
+            if (!file) return;
+
+            if (!currentUser) {
+                await getCurrentUser();
+            }
+
+            if (!currentUser) {
+                console.error(
+                    "Utilisateur non connecté"
+                );
+                return;
+            }
+
+            console.log(
+                "Photo/Vidéo sélectionnée :",
+                file.name
+            );
+
+
+            // ===============================
+            // NOM UNIQUE
+            // ===============================
+
+            const fileName =
+                Date.now() +
+                "_" +
+                Math.random()
+                    .toString(36)
+                    .substring(2) +
+                "_" +
+                file.name;
+
+
+            const filePath =
+                currentUser.id +
+                "/" +
+                fileName;
+
+
+            // ===============================
+            // UPLOAD STORAGE
+            // ===============================
+
+            const {
+                error: uploadError
+            } =
+                await supabaseClient
+                .storage
+                .from("chat-media")
+                .upload(
+                    filePath,
+                    file
+                );
+
+
+            if (uploadError) {
+
+                console.error(
+                    "Erreur upload photo/vidéo :",
+                    uploadError
+                );
+
+                alert(
+                    "Impossible d'envoyer la photo ou la vidéo."
+                );
+
+                photoInput.value = "";
+
+                return;
+            }
+
+
+            console.log(
+                "Photo/Vidéo envoyé dans Storage :",
+                filePath
+            );
+
+
+            // ===============================
+            // ENREGISTRER LE MESSAGE
+            // ===============================
+
+            const {
+                error
+            } =
+                await supabaseClient
+                .from("messages")
+                .insert({
+
+                    user_email:
+                        currentUser.email,
+
+                    message:
+                        "",
+
+                    reply_to_text:
+                        replyToMessage
+                            ? replyToMessage.message
+                            : null,
+
+                    media_url:
+                        filePath,
+
+                    media_type:
+                        file.type
+                });
+
+
+            if (error) {
+
+                console.error(
+                    "Erreur enregistrement photo/vidéo :",
+                    error
+                );
+
+                alert(
+                    "Le fichier a été envoyé mais le message n'a pas pu être enregistré."
+                );
+
+                photoInput.value = "";
+
+                return;
+            }
+
+
+            console.log(
+                "Photo/Vidéo enregistré dans messages."
+            );
+
+
+            // ===============================
+            // NETTOYAGE
+            // ===============================
+
+            photoInput.value = "";
+
+            clearReply();
+
+            messageInput.focus();
         }
     );
 }
