@@ -1,6 +1,5 @@
 const photoInput = document.getElementById("photoInput");
 const photoBtn = document.getElementById("photoBtn");
-
 const messagesContainer = document.getElementById("messages");
 const messageInput = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
@@ -13,7 +12,6 @@ let replyToMessage = null;
 let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
-
 // ===============================
 // UTILISATEUR CONNECTÉ
 // ===============================
@@ -68,6 +66,8 @@ async function displayMessage(message) {
     const div =
         document.createElement("div");
     div.classList.add("message");
+    // ID DU MESSAGE
+    div.dataset.messageId = message.id;
     // ===============================
     // CLIC POUR RÉPONDRE
     // ===============================
@@ -122,14 +122,10 @@ async function displayMessage(message) {
             // IMAGE
             // ===============================
             if (
-                mediaType.startsWith(
-                    "image/"
-                )
+                mediaType.startsWith("image/")
             ) {
                 const image =
-                    document.createElement(
-                        "img"
-                    );
+                    document.createElement("img");
                 image.src =
                     mediaUrl;
                 image.className =
@@ -146,14 +142,10 @@ async function displayMessage(message) {
             // VIDÉO
             // ===============================
             else if (
-                mediaType.startsWith(
-                    "video/"
-                )
+                mediaType.startsWith("video/")
             ) {
                 const video =
-                    document.createElement(
-                        "video"
-                    );
+                    document.createElement("video");
                 video.src =
                     mediaUrl;
                 video.className =
@@ -170,14 +162,10 @@ async function displayMessage(message) {
             // AUDIO
             // ===============================
             else if (
-                mediaType.startsWith(
-                    "audio/"
-                )
+                mediaType.startsWith("audio/")
             ) {
                 const audio =
-                    document.createElement(
-                        "audio"
-                    );
+                    document.createElement("audio");
                 audio.src =
                     mediaUrl;
                 audio.controls =
@@ -191,86 +179,82 @@ async function displayMessage(message) {
             // ===============================
             // AUTRE FICHIER
             // ===============================
- // ===============================
-// AUTRE FICHIER
-// ===============================
-else {
-
-const fileBox =
-    document.createElement("div");
-fileBox.className =
-    "chat-file-box";
-// ===============================
-// NOM DU FICHIER
-// ===============================
-const fileName =
-    message.media_url
-        .split("/")
-        .pop();
-// ===============================
-// ICÔNE
-// ===============================
-let icon = "📎";
-if (mediaType.includes("pdf")) {
-    icon = "📕";
-} else if (
-    mediaType.includes("word") ||
-    mediaType.includes("document")
-) {
-    icon = "📝";
-} else if (
-    mediaType.includes("excel") ||
-    mediaType.includes("spreadsheet")
-) {
-    icon = "📊";
-} else if (
-    mediaType.includes("powerpoint") ||
-    mediaType.includes("presentation")
-) {
-    icon = "📽️";
-} else if (
-    mediaType.includes("zip") ||
-    mediaType.includes("rar")
-) {
-    icon = "📦";
-} else if (
-    mediaType.includes("text")
-) {
-    icon = "📃";
-}
-// ===============================
-// INFORMATIONS
-// ===============================
-const info =
-    document.createElement("div");
-info.className =
-    "chat-file-info";
-const name =
-    document.createElement("div");
-name.className =
-    "chat-file-name";
-name.textContent =
-    fileName;
-const open =
-    document.createElement("a");
-open.href =
-    mediaUrl;
-open.target =
-    "_blank";
-open.rel =
-    "noopener noreferrer";
-open.className =
-    "chat-file-open";
-open.textContent =
-    "⬇️ Ouvrir le fichier";
-info.appendChild(name);
-info.appendChild(open);
-fileBox.innerHTML =
-    `<div class="chat-file-icon">${icon}</div>`;
-fileBox.appendChild(info);
-div.appendChild(fileBox);
-
-}
+            else {
+                const fileBox =
+                    document.createElement("div");
+                fileBox.className =
+                    "chat-file-box";
+                const fileName =
+                    message.media_url
+                    .split("/")
+                    .pop();
+                let icon = "📎";
+                if (
+                    mediaType.includes("pdf")
+                ) {
+                    icon = "📕";
+                } else if (
+                    mediaType.includes("word") ||
+                    mediaType.includes("document")
+                ) {
+                    icon = "📝";
+                } else if (
+                    mediaType.includes("excel") ||
+                    mediaType.includes("spreadsheet")
+                ) {
+                    icon = "📊";
+                } else if (
+                    mediaType.includes("powerpoint") ||
+                    mediaType.includes("presentation")
+                ) {
+                    icon = "📽️";
+                } else if (
+                    mediaType.includes("zip") ||
+                    mediaType.includes("rar")
+                ) {
+                    icon = "📦";
+                } else if (
+                    mediaType.includes("text")
+                ) {
+                    icon = "📃";
+                }
+                const info =
+                    document.createElement("div");
+                info.className =
+                    "chat-file-info";
+                const name =
+                    document.createElement("div");
+                name.className =
+                    "chat-file-name";
+                name.textContent =
+                    fileName;
+                const open =
+                    document.createElement("a");
+                open.href =
+                    mediaUrl;
+                open.target =
+                    "_blank";
+                open.rel =
+                    "noopener noreferrer";
+                open.className =
+                    "chat-file-open";
+                open.textContent =
+                    "⬇️ Ouvrir le fichier";
+                info.appendChild(
+                    name
+                );
+                info.appendChild(
+                    open
+                );
+                fileBox.innerHTML =
+                    `<div class="chat-file-icon">${icon}</div>`;
+                fileBox.appendChild(
+                    info
+                );
+                div.appendChild(
+                    fileBox
+                );
+            }
         }
     }
     // ===============================
@@ -278,9 +262,7 @@ div.appendChild(fileBox);
     // ===============================
     if (message.message) {
         const textBox =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
         textBox.className =
             "message-text";
         textBox.textContent =
@@ -293,9 +275,7 @@ div.appendChild(fileBox);
     // HEURE
     // ===============================
     const time =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
     time.className =
         "message-time";
     time.textContent =
@@ -311,36 +291,33 @@ div.appendChild(fileBox);
     div.appendChild(
         time
     );
-// ===============================
-// BOUTON SUPPRIMER
-// ===============================
-
-if (
-messageEmail === currentEmail
-) {
-
-const deleteBtn =
-    document.createElement("button");
-deleteBtn.className =
-    "delete-message-btn";
-deleteBtn.textContent =
-    "🗑️";
-deleteBtn.title =
-    "Supprimer";
-deleteBtn.addEventListener(
-    "click",
-    async (event) => {
-        event.stopPropagation();
-        await deleteMessage(
-            message
+    // ===============================
+    // BOUTON SUPPRIMER
+    // ===============================
+    if (
+        messageEmail === currentEmail
+    ) {
+        const deleteBtn =
+            document.createElement("button");
+        deleteBtn.className =
+            "delete-message-btn";
+        deleteBtn.textContent =
+            "🗑️";
+        deleteBtn.title =
+            "Supprimer";
+        deleteBtn.addEventListener(
+            "click",
+            async (event) => {
+                event.stopPropagation();
+                await deleteMessage(
+                    message
+                );
+            }
+        );
+        div.appendChild(
+            deleteBtn
         );
     }
-);
-div.appendChild(
-    deleteBtn
-);
-
-}
     // ===============================
     // APPUI LONG MOBILE
     // ===============================
@@ -489,9 +466,7 @@ if (mediaBtn && mediaInput) {
 // ===============================
 // BOUTON PHOTO / VIDÉO
 // ===============================
-
 if (photoBtn && photoInput) {
-
     photoBtn.addEventListener(
         "click",
         () => {
@@ -502,39 +477,26 @@ if (photoBtn && photoInput) {
 // ===============================
 // SÉLECTION PHOTO / VIDÉO
 // ===============================
-
 if (photoInput) {
-
     photoInput.addEventListener(
         "change",
         async () => {
-
             const file =
                 photoInput.files[0];
-
             if (!file) return;
-
             if (!currentUser) {
                 await getCurrentUser();
             }
-
             if (!currentUser) {
                 console.error(
                     "Utilisateur non connecté"
                 );
                 return;
             }
-
             console.log(
                 "Photo/Vidéo sélectionnée :",
                 file.name
             );
-
-
-            // ===============================
-            // NOM UNIQUE
-            // ===============================
-
             const fileName =
                 Date.now() +
                 "_" +
@@ -543,18 +505,10 @@ if (photoInput) {
                     .substring(2) +
                 "_" +
                 file.name;
-
-
             const filePath =
                 currentUser.id +
                 "/" +
                 fileName;
-
-
-            // ===============================
-            // UPLOAD STORAGE
-            // ===============================
-
             const {
                 error: uploadError
             } =
@@ -565,91 +519,49 @@ if (photoInput) {
                     filePath,
                     file
                 );
-
-
             if (uploadError) {
-
                 console.error(
                     "Erreur upload photo/vidéo :",
                     uploadError
                 );
-
                 alert(
                     "Impossible d'envoyer la photo ou la vidéo."
                 );
-
                 photoInput.value = "";
-
                 return;
             }
-
-
-            console.log(
-                "Photo/Vidéo envoyé dans Storage :",
-                filePath
-            );
-
-
-            // ===============================
-            // ENREGISTRER LE MESSAGE
-            // ===============================
-
             const {
                 error
             } =
                 await supabaseClient
                 .from("messages")
                 .insert({
-
                     user_email:
                         currentUser.email,
-
                     message:
                         "",
-
                     reply_to_text:
                         replyToMessage
                             ? replyToMessage.message
                             : null,
-
                     media_url:
                         filePath,
-
                     media_type:
                         file.type
                 });
-
-
             if (error) {
-
                 console.error(
                     "Erreur enregistrement photo/vidéo :",
                     error
                 );
-
                 alert(
                     "Le fichier a été envoyé mais le message n'a pas pu être enregistré."
                 );
-
                 photoInput.value = "";
-
                 return;
             }
-
-
-            console.log(
-                "Photo/Vidéo enregistré dans messages."
-            );
-
-
-            // ===============================
-            // NETTOYAGE
-            // ===============================
-
             photoInput.value = "";
-
             clearReply();
-
             messageInput.focus();
         }
     );
@@ -673,13 +585,6 @@ if (mediaInput) {
                 );
                 return;
             }
-            console.log(
-                "Fichier sélectionné :",
-                file.name
-            );
-            // ===============================
-            // NOM UNIQUE
-            // ===============================
             const fileName =
                 Date.now() +
                 "_" +
@@ -692,9 +597,6 @@ if (mediaInput) {
                 currentUser.id +
                 "/" +
                 fileName;
-            // ===============================
-            // UPLOAD STORAGE
-            // ===============================
             const {
                 error: uploadError
             } =
@@ -716,13 +618,6 @@ if (mediaInput) {
                 mediaInput.value = "";
                 return;
             }
-            console.log(
-                "Média envoyé dans Storage :",
-                filePath
-            );
-            // ===============================
-            // ENREGISTRER LE MESSAGE
-            // ===============================
             const {
                 error
             } =
@@ -753,12 +648,6 @@ if (mediaInput) {
                 mediaInput.value = "";
                 return;
             }
-            console.log(
-                "Média enregistré dans messages."
-            );
-            // ===============================
-            // NETTOYAGE
-            // ===============================
             mediaInput.value = "";
             clearReply();
             messageInput.focus();
@@ -769,9 +658,7 @@ if (mediaInput) {
 // REALTIME
 // ===============================
 supabaseClient
-    .channel(
-        "messages-realtime"
-    )
+    .channel("messages-realtime")
     .on(
         "postgres_changes",
         {
@@ -822,10 +709,8 @@ function startReply(message) {
             "replyBox";
         replyBox.innerHTML = `
             <div class="reply-preview">
-                <strong id="replyUser">
-                </strong>
-                <div id="replyText">
-                </div>
+                <strong id="replyUser"></strong>
+                <div id="replyText"></div>
             </div>
             <button
                 id="cancelReply"
@@ -910,279 +795,293 @@ function clearReply() {
 // ===============================
 // MESSAGE VOCAL
 // ===============================
-
 if (voiceBtn) {
-
-voiceBtn.addEventListener("click", async () => {
-    // ARRÊTER L'ENREGISTREMENT
-    if (isRecording) {
-        mediaRecorder.stop();
-        isRecording = false;
-        voiceBtn.textContent = "🎤";
-        return;
-    }
-    // UTILISATEUR
+    voiceBtn.addEventListener(
+        "click",
+        async () => {
+            if (isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                voiceBtn.textContent =
+                    "🎤";
+                return;
+            }
+            if (!currentUser) {
+                await getCurrentUser();
+            }
+            if (!currentUser) {
+                alert(
+                    "Utilisateur non connecté."
+                );
+                return;
+            }
+            try {
+                const stream =
+                    await navigator
+                    .mediaDevices
+                    .getUserMedia({
+                        audio: true
+                    });
+                audioChunks = [];
+                let mimeType = "";
+                if (
+                    MediaRecorder
+                    .isTypeSupported(
+                        "audio/mp4"
+                    )
+                ) {
+                    mimeType =
+                        "audio/mp4";
+                } else if (
+                    MediaRecorder
+                    .isTypeSupported(
+                        "audio/webm;codecs=opus"
+                    )
+                ) {
+                    mimeType =
+                        "audio/webm;codecs=opus";
+                } else if (
+                    MediaRecorder
+                    .isTypeSupported(
+                        "audio/webm"
+                    )
+                ) {
+                    mimeType =
+                        "audio/webm";
+                }
+                if (mimeType) {
+                    mediaRecorder =
+                        new MediaRecorder(
+                            stream,
+                            {
+                                mimeType:
+                                    mimeType
+                            }
+                        );
+                } else {
+                    mediaRecorder =
+                        new MediaRecorder(
+                            stream
+                        );
+                }
+                mediaRecorder.addEventListener(
+                    "dataavailable",
+                    event => {
+                        if (
+                            event.data.size > 0
+                        ) {
+                            audioChunks.push(
+                                event.data
+                            );
+                        }
+                    }
+                );
+                mediaRecorder.addEventListener(
+                    "stop",
+                    async () => {
+                        stream
+                            .getTracks()
+                            .forEach(
+                                track =>
+                                    track.stop()
+                            );
+                        const finalMimeType =
+                            mediaRecorder.mimeType ||
+                            mimeType ||
+                            "audio/webm";
+                        const audioBlob =
+                            new Blob(
+                                audioChunks,
+                                {
+                                    type:
+                                        finalMimeType
+                                }
+                            );
+                        await sendVoiceMessage(
+                            audioBlob,
+                            finalMimeType
+                        );
+                    }
+                );
+                mediaRecorder.start();
+                isRecording = true;
+                voiceBtn.textContent =
+                    "⏹️";
+                console.log(
+                    "Enregistrement vocal démarré"
+                );
+            } catch (error) {
+                console.error(
+                    "Erreur microphone :",
+                    error
+                );
+                alert(
+                    "Impossible d'utiliser le microphone."
+                );
+            }
+        }
+    );
+}
+// ===============================
+// ENVOYER LE VOCAL
+// ===============================
+async function sendVoiceMessage(
+    audioBlob,
+    mimeType
+) {
     if (!currentUser) {
         await getCurrentUser();
     }
     if (!currentUser) {
-        alert("Utilisateur non connecté.");
         return;
     }
-    try {
-        const stream =
-            await navigator.mediaDevices.getUserMedia({
-                audio: true
-            });
-        audioChunks = [];
-        /*
-        Sur iPhone, Safari utilise généralement
-        un format audio compatible avec le navigateur.
-        */
-        let mimeType = "";
-        if (
-            MediaRecorder.isTypeSupported("audio/mp4")
-        ) {
-            mimeType = "audio/mp4";
-        } else if (
-            MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ) {
-            mimeType = "audio/webm;codecs=opus";
-        } else if (
-            MediaRecorder.isTypeSupported("audio/webm")
-        ) {
-            mimeType = "audio/webm";
-        }
-        if (mimeType) {
-            mediaRecorder =
-                new MediaRecorder(
-                    stream,
-                    {
-                        mimeType: mimeType
-                    }
-                );
-        } else {
-            mediaRecorder =
-                new MediaRecorder(stream);
-        }
-        mediaRecorder.addEventListener(
-            "dataavailable",
-            event => {
-                if (event.data.size > 0) {
-                    audioChunks.push(
-                        event.data
-                    );
-                }
+    let extension =
+        "webm";
+    if (
+        mimeType.includes("mp4")
+    ) {
+        extension =
+            "mp4";
+    } else if (
+        mimeType.includes("ogg")
+    ) {
+        extension =
+            "ogg";
+    }
+    const fileName =
+        Date.now() +
+        "_" +
+        Math.random()
+            .toString(36)
+            .substring(2) +
+        "." +
+        extension;
+    const filePath =
+        currentUser.id +
+        "/" +
+        fileName;
+    const {
+        error: uploadError
+    } =
+        await supabaseClient
+        .storage
+        .from("chat-media")
+        .upload(
+            filePath,
+            audioBlob,
+            {
+                contentType:
+                    mimeType
             }
         );
-        mediaRecorder.addEventListener(
-            "stop",
-            async () => {
-                stream
-                    .getTracks()
-                    .forEach(
-                        track => track.stop()
-                    );
-                const finalMimeType =
-                    mediaRecorder.mimeType ||
-                    mimeType ||
-                    "audio/webm";
-                const audioBlob =
-                    new Blob(
-                        audioChunks,
-                        {
-                            type:
-                                finalMimeType
-                        }
-                    );
-                await sendVoiceMessage(
-                    audioBlob,
-                    finalMimeType
-                );
-            }
-        );
-        mediaRecorder.start();
-        isRecording = true;
-        voiceBtn.textContent = "⏹️";
-        console.log(
-            "Enregistrement vocal démarré"
-        );
-    } catch (error) {
+    if (uploadError) {
         console.error(
-            "Erreur microphone :",
+            "Erreur upload vocal :",
+            uploadError
+        );
+        alert(
+            "Impossible d'envoyer le message vocal."
+        );
+        return;
+    }
+    const { error } =
+        await supabaseClient
+        .from("messages")
+        .insert({
+            user_email:
+                currentUser.email,
+            message:
+                "",
+            reply_to_text:
+                replyToMessage
+                    ? replyToMessage.message
+                    : null,
+            media_url:
+                filePath,
+            media_type:
+                mimeType
+        });
+    if (error) {
+        console.error(
+            "Erreur création message vocal :",
             error
         );
         alert(
-            "Impossible d'utiliser le microphone."
+            "Le vocal a été envoyé mais le message n'a pas pu être enregistré."
         );
+        return;
     }
-});
-
-}
-
-// ===============================
-// ENVOYER LE VOCAL
-// ===============================
-
-async function sendVoiceMessage(
-audioBlob,
-mimeType
-) {
-
-if (!currentUser) {
-    await getCurrentUser();
-}
-if (!currentUser) {
-    return;
-}
-// ===============================
-// EXTENSION
-// ===============================
-let extension = "webm";
-if (mimeType.includes("mp4")) {
-    extension = "mp4";
-} else if (mimeType.includes("ogg")) {
-    extension = "ogg";
-}
-// ===============================
-// NOM UNIQUE
-// ===============================
-const fileName =
-    Date.now() +
-    "_" +
-    Math.random()
-        .toString(36)
-        .substring(2) +
-    "." +
-    extension;
-const filePath =
-    currentUser.id +
-    "/" +
-    fileName;
-// ===============================
-// UPLOAD STORAGE
-// ===============================
-const {
-    error: uploadError
-} =
-    await supabaseClient
-    .storage
-    .from("chat-media")
-    .upload(
-        filePath,
-        audioBlob,
-        {
-            contentType: mimeType
-        }
+    clearReply();
+    console.log(
+        "Message vocal envoyé avec succès."
     );
-if (uploadError) {
-    console.error(
-        "Erreur upload vocal :",
-        uploadError
-    );
-    alert(
-        "Impossible d'envoyer le message vocal."
-    );
-    return;
-}
-console.log(
-    "Vocal enregistré :",
-    filePath
-);
-// ===============================
-// ENREGISTRER LE MESSAGE
-// ===============================
-const { error } =
-    await supabaseClient
-    .from("messages")
-    .insert({
-        user_email:
-            currentUser.email,
-        message:
-            "",
-        reply_to_text:
-            replyToMessage
-                ? replyToMessage.message
-                : null,
-        /*
-        IMPORTANT :
-        On enregistre le chemin Storage,
-        PAS l'URL publique.
-        */
-        media_url:
-            filePath,
-        media_type:
-            mimeType
-    });
-if (error) {
-    console.error(
-        "Erreur création message vocal :",
-        error
-    );
-    alert(
-        "Le vocal a été envoyé mais le message n'a pas pu être enregistré."
-    );
-    return;
-}
-clearReply();
-console.log(
-    "Message vocal envoyé avec succès."
-);
-
 }
 // ===============================
 // SUPPRIMER UN MESSAGE
 // ===============================
-
 async function deleteMessage(message) {
-
-if (!confirm("Supprimer ce message ?")) {
-    return;
-}
-// ===============================
-// SUPPRIMER LE FICHIER DU STORAGE
-// ===============================
-if (message.media_url) {
-    const { error: storageError } =
-        await supabaseClient
-        .storage
-        .from("chat-media")
-        .remove([
-            message.media_url
-        ]);
-    if (storageError) {
-        console.error(
-            "Erreur suppression fichier :",
-            storageError
-        );
+    if (
+        !confirm(
+            "Supprimer ce message ?"
+        )
+    ) {
+        return;
     }
-}
-// ===============================
-// SUPPRIMER LE MESSAGE
-// ===============================
-const { error } =
-    await supabaseClient
-    .from("messages")
-    .delete()
-    .eq(
-        "id",
-        message.id
+    // ===============================
+    // SUPPRIMER LE FICHIER STORAGE
+    // ===============================
+    if (message.media_url) {
+        const {
+            error: storageError
+        } =
+            await supabaseClient
+            .storage
+            .from("chat-media")
+            .remove([
+                message.media_url
+            ]);
+        if (storageError) {
+            console.error(
+                "Erreur suppression fichier :",
+                storageError
+            );
+        }
+    }
+    // ===============================
+    // SUPPRIMER LE MESSAGE
+    // ===============================
+    const { error } =
+        await supabaseClient
+        .from("messages")
+        .delete()
+        .eq(
+            "id",
+            message.id
+        );
+    if (error) {
+        console.error(
+            "Erreur suppression message :",
+            error
+        );
+        alert(
+            "Impossible de supprimer le message."
+        );
+        return;
+    }
+    // ===============================
+    // SUPPRIMER LA BULLE DIRECTEMENT
+    // SANS RECHARGER LA PAGE
+    // ===============================
+    const messageElement =
+        messagesContainer.querySelector(
+            `[data-message-id="${message.id}"]`
+        );
+    if (messageElement) {
+        messageElement.remove();
+    }
+    console.log(
+        "Message supprimé sans recharger la page."
     );
-if (error) {
-    console.error(
-        "Erreur suppression message :",
-        error
-    );
-    alert(
-        "Impossible de supprimer le message."
-    );
-    return;
-}
-// ===============================
-// ACTUALISER LE CHAT
-// ===============================
-await loadMessages();
-
 }
 // ===============================
 // DÉMARRAGE
