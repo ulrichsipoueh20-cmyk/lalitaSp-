@@ -39,7 +39,7 @@ function selectMessageForReply(message) {
     startReply(message);
 }
 // ===============================
-// CRÉER UNE URL POUR UN MÉDIA PRIVÉ
+// URL MÉDIA PRIVÉ
 // ===============================
 async function getMediaUrl(filePath) {
     const { data, error } =
@@ -66,19 +66,21 @@ async function displayMessage(message) {
     const div =
         document.createElement("div");
     div.classList.add("message");
-    // ID DU MESSAGE
-    div.dataset.messageId = message.id;
+    div.dataset.messageId =
+        message.id;
     // ===============================
     // CLIC POUR RÉPONDRE
     // ===============================
     div.addEventListener(
         "click",
         () => {
-            selectMessageForReply(message);
+            selectMessageForReply(
+                message
+            );
         }
     );
     // ===============================
-    // IDENTIFIER L'UTILISATEUR
+    // IDENTIFIER UTILISATEUR
     // ===============================
     const messageEmail =
         (message.user_email || "")
@@ -88,7 +90,9 @@ async function displayMessage(message) {
         (currentUser?.email || "")
         .trim()
         .toLowerCase();
-    if (messageEmail === currentEmail) {
+    if (
+        messageEmail === currentEmail
+    ) {
         div.classList.add("me");
     } else {
         div.classList.add("other");
@@ -122,10 +126,14 @@ async function displayMessage(message) {
             // IMAGE
             // ===============================
             if (
-                mediaType.startsWith("image/")
+                mediaType.startsWith(
+                    "image/"
+                )
             ) {
                 const image =
-                    document.createElement("img");
+                    document.createElement(
+                        "img"
+                    );
                 image.src =
                     mediaUrl;
                 image.className =
@@ -142,10 +150,14 @@ async function displayMessage(message) {
             // VIDÉO
             // ===============================
             else if (
-                mediaType.startsWith("video/")
+                mediaType.startsWith(
+                    "video/"
+                )
             ) {
                 const video =
-                    document.createElement("video");
+                    document.createElement(
+                        "video"
+                    );
                 video.src =
                     mediaUrl;
                 video.className =
@@ -162,10 +174,14 @@ async function displayMessage(message) {
             // AUDIO
             // ===============================
             else if (
-                mediaType.startsWith("audio/")
+                mediaType.startsWith(
+                    "audio/"
+                )
             ) {
                 const audio =
-                    document.createElement("audio");
+                    document.createElement(
+                        "audio"
+                    );
                 audio.src =
                     mediaUrl;
                 audio.controls =
@@ -181,7 +197,9 @@ async function displayMessage(message) {
             // ===============================
             else {
                 const fileBox =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
                 fileBox.className =
                     "chat-file-box";
                 const fileName =
@@ -219,17 +237,23 @@ async function displayMessage(message) {
                     icon = "📃";
                 }
                 const info =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
                 info.className =
                     "chat-file-info";
                 const name =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
                 name.className =
                     "chat-file-name";
                 name.textContent =
                     fileName;
                 const open =
-                    document.createElement("a");
+                    document.createElement(
+                        "a"
+                    );
                 open.href =
                     mediaUrl;
                 open.target =
@@ -262,7 +286,9 @@ async function displayMessage(message) {
     // ===============================
     if (message.message) {
         const textBox =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
         textBox.className =
             "message-text";
         textBox.textContent =
@@ -272,10 +298,18 @@ async function displayMessage(message) {
         );
     }
     // ===============================
-    // HEURE
+    // HEURE + ACCUSÉ
     // ===============================
+    const bottomRow =
+        document.createElement(
+            "div"
+        );
+    bottomRow.className =
+        "message-bottom";
     const time =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
     time.className =
         "message-time";
     time.textContent =
@@ -288,8 +322,29 @@ async function displayMessage(message) {
                 minute: "2-digit"
             }
         );
-    div.appendChild(
+    bottomRow.appendChild(
         time
+    );
+    // ===============================
+    // ACCUSÉ DE RÉCEPTION
+    // ===============================
+    if (
+        messageEmail === currentEmail
+    ) {
+        const status =
+            document.createElement(
+                "span"
+            );
+        status.className =
+            "message-status";
+        status.textContent =
+            "✓✓";
+        bottomRow.appendChild(
+            status
+        );
+    }
+    div.appendChild(
+        bottomRow
     );
     // ===============================
     // BOUTON SUPPRIMER
@@ -298,7 +353,9 @@ async function displayMessage(message) {
         messageEmail === currentEmail
     ) {
         const deleteBtn =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
         deleteBtn.className =
             "delete-message-btn";
         deleteBtn.textContent =
@@ -382,15 +439,18 @@ async function loadMessages() {
         );
         return;
     }
-    messagesContainer.innerHTML = "";
-    for (const message of data) {
+    messagesContainer.innerHTML =
+        "";
+    for (
+        const message of data
+    ) {
         await displayMessage(
             message
         );
     }
 }
 // ===============================
-// ENVOYER UN MESSAGE TEXTE
+// ENVOYER MESSAGE TEXTE
 // ===============================
 async function sendMessage() {
     const text =
@@ -429,7 +489,8 @@ async function sendMessage() {
         );
         return;
     }
-    messageInput.value = "";
+    messageInput.value =
+        "";
     clearReply();
     messageInput.focus();
 }
@@ -446,7 +507,9 @@ sendBtn.addEventListener(
 messageInput.addEventListener(
     "keydown",
     (e) => {
-        if (e.key === "Enter") {
+        if (
+            e.key === "Enter"
+        ) {
             e.preventDefault();
             sendMessage();
         }
@@ -455,7 +518,10 @@ messageInput.addEventListener(
 // ===============================
 // BOUTON MÉDIA
 // ===============================
-if (mediaBtn && mediaInput) {
+if (
+    mediaBtn &&
+    mediaInput
+) {
     mediaBtn.addEventListener(
         "click",
         () => {
@@ -466,7 +532,10 @@ if (mediaBtn && mediaInput) {
 // ===============================
 // BOUTON PHOTO / VIDÉO
 // ===============================
-if (photoBtn && photoInput) {
+if (
+    photoBtn &&
+    photoInput
+) {
     photoBtn.addEventListener(
         "click",
         () => {
@@ -527,7 +596,8 @@ if (photoInput) {
                 alert(
                     "Impossible d'envoyer la photo ou la vidéo."
                 );
-                photoInput.value = "";
+                photoInput.value =
+                    "";
                 return;
             }
             const {
@@ -557,10 +627,12 @@ if (photoInput) {
                 alert(
                     "Le fichier a été envoyé mais le message n'a pas pu être enregistré."
                 );
-                photoInput.value = "";
+                photoInput.value =
+                    "";
                 return;
             }
-            photoInput.value = "";
+            photoInput.value =
+                "";
             clearReply();
             messageInput.focus();
         }
@@ -615,7 +687,8 @@ if (mediaInput) {
                 alert(
                     "Impossible d'envoyer le fichier."
                 );
-                mediaInput.value = "";
+                mediaInput.value =
+                    "";
                 return;
             }
             const {
@@ -645,10 +718,12 @@ if (mediaInput) {
                 alert(
                     "Le fichier a été envoyé mais le message n'a pas pu être enregistré."
                 );
-                mediaInput.value = "";
+                mediaInput.value =
+                    "";
                 return;
             }
-            mediaInput.value = "";
+            mediaInput.value =
+                "";
             clearReply();
             messageInput.focus();
         }
@@ -658,7 +733,9 @@ if (mediaInput) {
 // REALTIME
 // ===============================
 supabaseClient
-    .channel("messages-realtime")
+    .channel(
+        "messages-realtime"
+    )
     .on(
         "postgres_changes",
         {
@@ -743,9 +820,9 @@ function startReply(message) {
             message.user_email
                 .trim()
                 .toLowerCase() ===
-                "lalita@gmail.com"
-                    ? "LALITA"
-                    : "SIPOUEH";
+            "lalita@gmail.com"
+                ? "LALITA"
+                : "SIPOUEH";
     document
         .getElementById(
             "replyText"
@@ -758,7 +835,7 @@ function startReply(message) {
     messageInput.focus();
 }
 // ===============================
-// ANNULER LA RÉPONSE
+// ANNULER RÉPONSE
 // ===============================
 function cancelReply() {
     replyToMessage =
@@ -776,7 +853,7 @@ function cancelReply() {
     messageInput.focus();
 }
 // ===============================
-// NETTOYER LA RÉPONSE
+// NETTOYER RÉPONSE
 // ===============================
 function clearReply() {
     replyToMessage =
@@ -801,7 +878,8 @@ if (voiceBtn) {
         async () => {
             if (isRecording) {
                 mediaRecorder.stop();
-                isRecording = false;
+                isRecording =
+                    false;
                 voiceBtn.textContent =
                     "🎤";
                 return;
@@ -823,7 +901,8 @@ if (voiceBtn) {
                         audio: true
                     });
                 audioChunks = [];
-                let mimeType = "";
+                let mimeType =
+                    "";
                 if (
                     MediaRecorder
                     .isTypeSupported(
@@ -839,7 +918,7 @@ if (voiceBtn) {
                     )
                 ) {
                     mimeType =
-                        "audio/webm;codecs=opus";
+                        "audio/webm";
                 } else if (
                     MediaRecorder
                     .isTypeSupported(
@@ -904,7 +983,8 @@ if (voiceBtn) {
                     }
                 );
                 mediaRecorder.start();
-                isRecording = true;
+                isRecording =
+                    true;
                 voiceBtn.textContent =
                     "⏹️";
                 console.log(
@@ -923,7 +1003,7 @@ if (voiceBtn) {
     );
 }
 // ===============================
-// ENVOYER LE VOCAL
+// ENVOYER VOCAL
 // ===============================
 async function sendVoiceMessage(
     audioBlob,
@@ -1028,7 +1108,7 @@ async function deleteMessage(message) {
         return;
     }
     // ===============================
-    // SUPPRIMER LE FICHIER STORAGE
+    // SUPPRIMER FICHIER STORAGE
     // ===============================
     if (message.media_url) {
         const {
@@ -1048,7 +1128,7 @@ async function deleteMessage(message) {
         }
     }
     // ===============================
-    // SUPPRIMER LE MESSAGE
+    // SUPPRIMER MESSAGE
     // ===============================
     const { error } =
         await supabaseClient
@@ -1069,7 +1149,7 @@ async function deleteMessage(message) {
         return;
     }
     // ===============================
-    // SUPPRIMER LA BULLE DIRECTEMENT
+    // SUPPRIMER LA BULLE
     // SANS RECHARGER LA PAGE
     // ===============================
     const messageElement =
