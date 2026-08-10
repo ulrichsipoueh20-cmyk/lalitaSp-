@@ -1,49 +1,80 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private Chat</title>
-
-    <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+<meta
+    name="theme-color"
+    content="#180b18">
+<title>SIPOUEH ❤️ LALITA</title>
+<link
+    rel="stylesheet"
+    href="css/style.css">
 </head>
-<body>
-
+<body class="chat-page">
+<div class="hearts-bg">
+    <span>♥</span>
+    <span>♡</span>
+    <span>♥</span>
+    <span>♡</span>
+    <span>♥</span>
+    <span>♡</span>
+    <span>♥</span>
+    <span>♡</span>
+</div>
 <div class="chat-container">
-
     <header class="chat-header">
-
-        <h2>Private Chat</h2>
-
-        <button id="logoutBtn">
-            Déconnexion
-        </button>
-
+        <div class="couple-header">
+            <div class="chat-heart">
+                ♥
+            </div>
+            <div>
+                <h2>
+                    SIPOUEH
+                    <span>❤️</span>
+                    LALITA
+                </h2>
+                <div class="love-status">
+                    <span class="online-dot"></span>
+                    Notre conversation privée 💕
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <span
+                id="currentUserName"
+                class="current-user-name">
+            </span>
+            <button
+                id="logoutBtn"
+                class="logout-btn">
+                Quitter
+            </button>
+        </div>
     </header>
-
-    <div id="messages" class="messages"></div>
-
+    <main
+        id="messages"
+        class="messages">
+    </main>
     <div class="message-box">
-
         <input
             type="text"
             id="messageInput"
-            placeholder="Écrire un message..."
-            autocomplete="off">
-
-        <button id="sendBtn">
-            Envoyer
+            placeholder="Écris-moi quelque chose... ❤️"
+            autocomplete="off"
+            maxlength="2000">
+        <button
+            id="sendBtn"
+            aria-label="Envoyer">
+            ♥
+            
         </button>
-
     </div>
-
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="js/config.js"></script>
-
 <script src="js/chat.js"></script>
-
 </body>
 </html>
