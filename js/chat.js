@@ -63,8 +63,13 @@ function displayMessage(message) {
 
     }
 
-    div.textContent = message.message;
-
+    div.textContent =
+    message.message +
+    "\n" +
+    new Date(message.created_at).toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
     messagesContainer.appendChild(div);
 
     messagesContainer.scrollTop =
@@ -238,5 +243,3 @@ async function startChat() {
 }
 
 startChat();
-
-    
