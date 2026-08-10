@@ -1,3 +1,187 @@
+
+#replyBox {
+    width: 100%;
+    display: none;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px 12px;
+
+    background: rgba(29, 11, 32, 0.98);
+
+    border-top: 1px solid rgba(244, 114, 182, 0.10);
+
+    animation: replyBoxAppear 0.2s ease;
+}
+
+@keyframes replyBoxAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+/* Citation du message sélectionné */
+
+#replyBox .reply-preview {
+
+    flex: 1;
+    min-width: 0;
+
+    padding: 8px 11px;
+
+    background: rgba(236, 72, 153, 0.10);
+
+    border-left: 3px solid #ec4899;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+}
+
+/* Nom de la personne */
+
+#replyBox #replyUser {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #f9a8d4;
+
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* Texte du message sélectionné */
+
+#replyBox #replyText {
+
+    color: #d8bfd3;
+
+    font-size: 12px;
+    line-height: 1.35;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Bouton X */
+
+#replyBox #cancelReply {
+
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(244, 63, 94, 0.12);
+
+    color: #fda4af;
+
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+/* Appui */
+
+#replyBox #cancelReply:active {
+
+    transform: scale(0.9);
+
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    #replyBox {
+        padding: 7px 10px;
+    }
+
+    #replyBox .reply-preview {
+        padding: 7px 10px;
+    }
+
+    #replyBox #replyText {
+        font-size: 11px;
+    }
+
+}
+/* Zone du message auquel on répond */
+.message .reply-preview {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+
+    background: rgba(0, 0, 0, 0.22);
+
+    border-left: 3px solid #f472b6;
+    border-radius: 8px;
+
+    color: #f9c5df;
+    font-size: 12px;
+    line-height: 1.35;
+
+    white-space: pre-wrap;
+    word-break: break-word;
+
+    opacity: 0.95;
+}
+
+/* Réponse elle-même */
+.message .message-text {
+    display: block;
+    color: inherit;
+    font-size: 15px;
+    line-height: 1.45;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+/* Heure */
+.message .message-time {
+    display: block;
+    margin-top: 5px;
+
+    text-align: right;
+
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* Citation dans MES messages */
+.message.me .reply-preview {
+    background: rgba(0, 0, 0, 0.20);
+    border-left-color: #ffd1e6;
+    color: #ffe3ef;
+}
+
+/* Citation dans les messages de LALITA */
+.message.other .reply-preview {
+    background: rgba(255, 255, 255, 0.06);
+    border-left-color: #ec4899;
+    color: #f5c6dc;
+}
+
 * {
     margin: 0;
     padding: 0;
