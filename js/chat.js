@@ -649,216 +649,224 @@ function clearReply() {
 // MESSAGE VOCAL
 // ===============================
 
-voiceBtn.addEventListener("click", async () => {
+if (voiceBtn) {
 
+voiceBtn.addEventListener("click", async () => {
     // ARRÊTER L'ENREGISTREMENT
     if (isRecording) {
-
         mediaRecorder.stop();
-
         isRecording = false;
-
         voiceBtn.textContent = "🎤";
-
         return;
     }
-
     // UTILISATEUR
     if (!currentUser) {
         await getCurrentUser();
     }
-
     if (!currentUser) {
         alert("Utilisateur non connecté.");
         return;
     }
-
     try {
-
         const stream =
             await navigator.mediaDevices.getUserMedia({
                 audio: true
             });
-
         audioChunks = [];
-
-        mediaRecorder =
-            new MediaRecorder(stream);
-
+        /*
+        Sur iPhone, Safari utilise généralement
+        un format audio compatible avec le navigateur.
+        */
+        let mimeType = "";
+        if (
+            MediaRecorder.isTypeSupported("audio/mp4")
+        ) {
+            mimeType = "audio/mp4";
+        } else if (
+            MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ) {
+            mimeType = "audio/webm;codecs=opus";
+        } else if (
+            MediaRecorder.isTypeSupported("audio/webm")
+        ) {
+            mimeType = "audio/webm";
+        }
+        if (mimeType) {
+            mediaRecorder =
+                new MediaRecorder(
+                    stream,
+                    {
+                        mimeType: mimeType
+                    }
+                );
+        } else {
+            mediaRecorder =
+                new MediaRecorder(stream);
+        }
         mediaRecorder.addEventListener(
             "dataavailable",
             event => {
-
                 if (event.data.size > 0) {
-                    audioChunks.push(event.data);
+                    audioChunks.push(
+                        event.data
+                    );
                 }
-
             }
         );
-
         mediaRecorder.addEventListener(
             "stop",
             async () => {
-
                 stream
                     .getTracks()
-                    .forEach(track => track.stop());
-
+                    .forEach(
+                        track => track.stop()
+                    );
+                const finalMimeType =
+                    mediaRecorder.mimeType ||
+                    mimeType ||
+                    "audio/webm";
                 const audioBlob =
                     new Blob(
                         audioChunks,
                         {
-                            type: "audio/webm"
+                            type:
+                                finalMimeType
                         }
                     );
-
                 await sendVoiceMessage(
-                    audioBlob
+                    audioBlob,
+                    finalMimeType
                 );
             }
         );
-
         mediaRecorder.start();
-
         isRecording = true;
-
         voiceBtn.textContent = "⏹️";
-
         console.log(
             "Enregistrement vocal démarré"
         );
-
     } catch (error) {
-
         console.error(
             "Erreur microphone :",
             error
         );
-
         alert(
             "Impossible d'utiliser le microphone."
         );
     }
 });
 
+}
 
 // ===============================
 // ENVOYER LE VOCAL
 // ===============================
 
-async function sendVoiceMessage(audioBlob) {
+async function sendVoiceMessage(
+audioBlob,
+mimeType
+) {
 
-    const fileName =
-        Date.now() +
-        "_" +
-        Math.random()
-            .toString(36)
-            .substring(2) +
-        ".webm";
-
-    const filePath =
-        currentUser.id +
-        "/" +
-        fileName;
-
-
-    // ===============================
-    // UPLOAD STORAGE
-    // ===============================
-
-    const { error: uploadError } =
-        await supabaseClient
-        .storage
-        .from("chat-media")
-        .upload(
-            filePath,
-            audioBlob,
-            {
-                contentType: "audio/webm"
-            }
-        );
-
-    if (uploadError) {
-
-        console.error(
-            "Erreur upload vocal :",
-            uploadError
-        );
-
-        alert(
-            "Impossible d'envoyer le message vocal."
-        );
-
-        return;
-    }
-
-
-    // ===============================
-    // URL DU FICHIER
-    // ===============================
-
-    const { data } =
-        supabaseClient
-        .storage
-        .from("chat-media")
-        .getPublicUrl(filePath);
-
-    const mediaUrl =
-        data.publicUrl;
-
-
-    // ===============================
-    // ENREGISTRER LE MESSAGE
-    // ===============================
-
-    const { error } =
-        await supabaseClient
-        .from("messages")
-        .insert({
-
-            user_email:
-                currentUser.email,
-
-            message:
-                "",
-
-            reply_to_text:
-                replyToMessage
-                    ? replyToMessage.message
-                    : null,
-
-            media_url:
-                mediaUrl,
-
-            media_type:
-                "audio/webm"
-        });
-
-
-    if (error) {
-
-        console.error(
-            "Erreur création message vocal :",
-            error
-        );
-
-        alert(
-            "Le vocal a été envoyé mais n'a pas pu être enregistré."
-        );
-
-        return;
-    }
-
-
-    // ===============================
-    // NETTOYAGE
-    // ===============================
-
-    clearReply();
-
-    console.log(
-        "Message vocal envoyé"
+if (!currentUser) {
+    await getCurrentUser();
+}
+if (!currentUser) {
+    return;
+}
+// ===============================
+// EXTENSION
+// ===============================
+let extension = "webm";
+if (mimeType.includes("mp4")) {
+    extension = "mp4";
+} else if (mimeType.includes("ogg")) {
+    extension = "ogg";
+}
+// ===============================
+// NOM UNIQUE
+// ===============================
+const fileName =
+    Date.now() +
+    "_" +
+    Math.random()
+        .toString(36)
+        .substring(2) +
+    "." +
+    extension;
+const filePath =
+    currentUser.id +
+    "/" +
+    fileName;
+// ===============================
+// UPLOAD STORAGE
+// ===============================
+const {
+    error: uploadError
+} =
+    await supabaseClient
+    .storage
+    .from("chat-media")
+    .upload(
+        filePath,
+        audioBlob,
+        {
+            contentType: mimeType
+        }
     );
+if (uploadError) {
+    console.error(
+        "Erreur upload vocal :",
+        uploadError
+    );
+    alert(
+        "Impossible d'envoyer le message vocal."
+    );
+    return;
+}
+console.log(
+    "Vocal enregistré :",
+    filePath
+);
+// ===============================
+// ENREGISTRER LE MESSAGE
+// ===============================
+const { error } =
+    await supabaseClient
+    .from("messages")
+    .insert({
+        user_email:
+            currentUser.email,
+        message:
+            "",
+        reply_to_text:
+            replyToMessage
+                ? replyToMessage.message
+                : null,
+        /*
+        IMPORTANT :
+        On enregistre le chemin Storage,
+        PAS l'URL publique.
+        */
+        media_url:
+            filePath,
+        media_type:
+            mimeType
+    });
+if (error) {
+    console.error(
+        "Erreur création message vocal :",
+        error
+    );
+    alert(
+        "Le vocal a été envoyé mais le message n'a pas pu être enregistré."
+    );
+    return;
+}
+clearReply();
+console.log(
+    "Message vocal envoyé avec succès."
+);
+
 }
 // ===============================
 // DÉMARRAGE
