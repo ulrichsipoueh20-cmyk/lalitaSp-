@@ -1,137 +1,886 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    }
+.message {
+    white-space: pre-wrap;
 }
-body{
-    background:#0f172a;
-    color:white;
-    height:100vh;
+
+html,
+body {
+width: 100%;
+height: 100%;
 }
-/* -------- LOGIN -------- */
-.login-container{
-    width:100%;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
+
+body {
+color: white;
+overflow: hidden;
 }
-.login-card{
-    width:100%;
-    max-width:400px;
-    background:#1e293b;
-    padding:30px;
-    border-radius:15px;
+
+/* ==================================================
+FOND ROMANTIQUE
+================================================== */
+
+.login-page,
+.chat-page {
+
+background:
+    radial-gradient(
+        circle at 20% 10%,
+        rgba(236, 72, 153, 0.20),
+        transparent 30%
+    ),
+    radial-gradient(
+        circle at 80% 90%,
+        rgba(168, 85, 247, 0.20),
+        transparent 35%
+    ),
+    linear-gradient(
+        135deg,
+        #120814,
+        #1d0b20,
+        #0d0712
+    );
+
 }
-.login-card h1{
-    text-align:center;
-    margin-bottom:10px;
+
+/* ==================================================
+CŒURS FLOTTANTS
+================================================== */
+
+.hearts-bg {
+
+position: fixed;
+inset: 0;
+overflow: hidden;
+pointer-events: none;
+z-index: 0;
+
 }
-.login-card p{
-    text-align:center;
-    color:#cbd5e1;
-    margin-bottom:20px;
+
+.hearts-bg span {
+
+position: absolute;
+bottom: -60px;
+color: rgba(244, 63, 94, 0.18);
+font-size: 22px;
+animation:
+    floatingHeart 12s linear infinite;
+
 }
-.login-card input{
-    width:100%;
-    padding:14px;
-    margin-bottom:15px;
-    border:none;
-    border-radius:10px;
-    outline:none;
-    background:#334155;
-    color:white;
+
+.hearts-bg span:nth-child(1) {
+left: 5%;
+animation-delay: 0s;
+font-size: 22px;
 }
-.login-card button{
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    background:#2563eb;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
+
+.hearts-bg span:nth-child(2) {
+left: 15%;
+animation-delay: 3s;
+font-size: 17px;
 }
-.login-card button:hover{
-    background:#1d4ed8;
+
+.hearts-bg span:nth-child(3) {
+left: 27%;
+animation-delay: 6s;
+font-size: 28px;
 }
-/* -------- CHAT -------- */
-.chat-container{
-    display:flex;
-    flex-direction:column;
-    height:100vh;
+
+.hearts-bg span:nth-child(4) {
+left: 39%;
+animation-delay: 1s;
+font-size: 16px;
 }
-.chat-header{
-    background:#1e293b;
-    padding:15px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+
+.hearts-bg span:nth-child(5) {
+left: 50%;
+animation-delay: 4s;
+font-size: 25px;
 }
-.chat-header button{
-    border:none;
-    background:#ef4444;
-    color:white;
-    padding:10px 15px;
-    border-radius:8px;
-    cursor:pointer;
+
+.hearts-bg span:nth-child(6) {
+left: 62%;
+animation-delay: 7s;
+font-size: 19px;
 }
-/* -------- MESSAGES -------- */
-.messages{
-    flex:1;
-    overflow-y:auto;
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+
+.hearts-bg span:nth-child(7) {
+left: 74%;
+animation-delay: 2s;
+font-size: 30px;
 }
-.message{
-    max-width:75%;
-    padding:12px 15px;
-    border-radius:16px;
-    word-wrap:break-word;
+
+.hearts-bg span:nth-child(8) {
+left: 84%;
+animation-delay: 5s;
+font-size: 18px;
 }
-.me{
-    align-self:flex-end;
-    background:#2563eb;
-    color:white;
-    border-bottom-right-radius:5px;
+
+.hearts-bg span:nth-child(9) {
+left: 92%;
+animation-delay: 8s;
+font-size: 24px;
 }
-.other{
-    align-self:flex-start;
-    background:#334155;
-    color:white;
-    border-bottom-left-radius:5px;
+
+.hearts-bg span:nth-child(10) {
+left: 45%;
+animation-delay: 10s;
+font-size: 15px;
 }
-/* -------- ZONE MESSAGE -------- */
-.message-box{
-    display:flex;
-    gap:10px;
-    padding:15px;
-    background:#1e293b;
+
+@keyframes floatingHeart {
+
+0% {
+    transform:
+        translateY(0)
+        rotate(0deg);
+    opacity: 0;
 }
-.message-box input{
-    flex:1;
-    padding:14px;
-    border:none;
-    border-radius:10px;
-    outline:none;
-    background:#334155;
-    color:white;
+10% {
+    opacity: 0.7;
 }
-.message-box button{
-    border:none;
-    background:#2563eb;
-    color:white;
-    padding:0 20px;
-    border-radius:10px;
-    cursor:pointer;
+50% {
+    transform:
+        translateY(-50vh)
+        rotate(15deg);
+    opacity: 0.35;
 }
-/* -------- MESSAGE ERREUR LOGIN -------- */
-#message{
-    margin-top:15px;
-    text-align:center;
-    color:#f87171;
+100% {
+    transform:
+        translateY(-110vh)
+        rotate(-15deg);
+    opacity: 0;
+}
+
+}
+
+/* ==================================================
+LOGIN
+================================================== */
+
+.login-container {
+
+width: 100%;
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 20px;
+position: relative;
+z-index: 2;
+
+}
+
+.login-card {
+
+width: 100%;
+max-width: 410px;
+padding: 35px 27px;
+background:
+    linear-gradient(
+        145deg,
+        rgba(47, 19, 48, 0.96),
+        rgba(25, 11, 29, 0.96)
+    );
+border:
+    1px solid
+    rgba(244, 114, 182, 0.18);
+border-radius: 28px;
+box-shadow:
+    0 25px 70px
+    rgba(0, 0, 0, 0.5),
+    0 0 50px
+    rgba(236, 72, 153, 0.08);
+backdrop-filter: blur(15px);
+animation:
+    cardAppear 0.8s ease;
+
+}
+
+@keyframes cardAppear {
+
+from {
+    opacity: 0;
+    transform:
+        translateY(25px)
+        scale(0.96);
+}
+to {
+    opacity: 1;
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+}
+
+/* ==================================================
+LOGO AMOUR
+================================================== */
+
+.love-logo {
+
+width: 75px;
+height: 75px;
+margin:
+    0 auto 18px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 50%;
+background:
+    linear-gradient(
+        135deg,
+        #ec4899,
+        #e11d48
+    );
+box-shadow:
+    0 10px 35px
+    rgba(236, 72, 153, 0.4);
+animation:
+    heartbeat 2s infinite;
+
+}
+
+.love-logo span {
+
+font-size: 36px;
+color: white;
+
+}
+
+@keyframes heartbeat {
+
+0%,
+100% {
+    transform: scale(1);
+}
+15% {
+    transform: scale(1.08);
+}
+30% {
+    transform: scale(1);
+}
+45% {
+    transform: scale(1.06);
+}
+
+}
+
+.couple-name {
+
+text-align: center;
+color: #f9a8d4;
+font-size: 14px;
+font-weight: bold;
+letter-spacing: 2px;
+margin-bottom: 8px;
+
+}
+
+.couple-name span {
+
+color: #fb7185;
+margin: 0 3px;
+
+}
+
+.login-card h1 {
+
+text-align: center;
+font-size: 29px;
+margin-bottom: 10px;
+background:
+    linear-gradient(
+        90deg,
+        #f9a8d4,
+        #fda4af,
+        #d8b4fe
+    );
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+
+}
+
+.login-subtitle {
+
+text-align: center;
+color: #c4a8c8;
+font-size: 14px;
+line-height: 1.6;
+margin-bottom: 28px;
+
+}
+
+/* ==================================================
+INPUTS
+================================================== */
+
+.input-group {
+margin-bottom: 18px;
+}
+
+.input-group label {
+
+display: block;
+margin-bottom: 8px;
+font-size: 13px;
+color: #d8b4d8;
+
+}
+
+.login-card input {
+
+width: 100%;
+padding: 15px;
+border:
+    1px solid
+    rgba(244, 114, 182, 0.20);
+border-radius: 14px;
+outline: none;
+background:
+    rgba(10, 5, 13, 0.65);
+color: white;
+font-size: 15px;
+transition: 0.25s;
+
+}
+
+.login-card input::placeholder {
+color: #806580;
+}
+
+.login-card input:focus {
+
+border-color: #ec4899;
+box-shadow:
+    0 0 0 3px
+    rgba(236, 72, 153, 0.12);
+
+}
+
+/* ==================================================
+BOUTON LOGIN
+================================================== */
+
+.login-card button {
+
+width: 100%;
+padding: 15px;
+margin-top: 5px;
+border: none;
+border-radius: 14px;
+background:
+    linear-gradient(
+        135deg,
+        #ec4899,
+        #e11d48
+    );
+color: white;
+font-size: 15px;
+font-weight: bold;
+cursor: pointer;
+box-shadow:
+    0 8px 25px
+    rgba(236, 72, 153, 0.25);
+transition: 0.25s;
+
+}
+
+.login-card button:hover {
+
+transform:
+    translateY(-2px);
+box-shadow:
+    0 12px 30px
+    rgba(236, 72, 153, 0.35);
+
+}
+
+.login-card button:active {
+
+transform:
+    scale(0.98);
+
+}
+
+.login-card button:disabled {
+
+opacity: 0.6;
+cursor: not-allowed;
+
+}
+
+#message {
+
+min-height: 20px;
+margin-top: 15px;
+text-align: center;
+color: #fb7185;
+font-size: 13px;
+
+}
+
+.love-note {
+
+text-align: center;
+margin-top: 25px;
+padding-top: 18px;
+border-top:
+    1px solid
+    rgba(255,255,255,0.07);
+color: #806580;
+font-size: 12px;
+line-height: 1.5;
+
+}
+
+.love-note strong {
+color: #f9a8d4;
+}
+
+/* ==================================================
+CHAT
+================================================== */
+
+.chat-container {
+
+position: relative;
+z-index: 2;
+width: 100%;
+height: 100vh;
+display: flex;
+flex-direction: column;
+
+}
+
+/* ==================================================
+HEADER
+================================================== */
+
+.chat-header {
+
+min-height: 76px;
+padding:
+    12px 16px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 12px;
+background:
+    rgba(29, 11, 32, 0.94);
+border-bottom:
+    1px solid
+    rgba(244, 114, 182, 0.12);
+backdrop-filter: blur(15px);
+
+}
+
+.couple-header {
+
+display: flex;
+align-items: center;
+gap: 12px;
+min-width: 0;
+
+}
+
+.chat-heart {
+
+width: 45px;
+height: 45px;
+flex-shrink: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 15px;
+background:
+    linear-gradient(
+        135deg,
+        #ec4899,
+        #e11d48
+    );
+font-size: 22px;
+box-shadow:
+    0 6px 20px
+    rgba(236, 72, 153, 0.25);
+animation:
+    heartbeat 2s infinite;
+
+}
+
+.couple-header h2 {
+
+font-size: 16px;
+color: #fce7f3;
+margin-bottom: 4px;
+
+}
+
+.couple-header h2 span {
+font-size: 13px;
+}
+
+.love-status {
+
+display: flex;
+align-items: center;
+gap: 6px;
+color: #a78ba8;
+font-size: 10px;
+
+}
+
+.online-dot {
+
+width: 7px;
+height: 7px;
+border-radius: 50%;
+background: #f472b6;
+box-shadow:
+    0 0 8px
+    rgba(244,114,182,0.8);
+
+}
+
+.header-right {
+
+display: flex;
+align-items: center;
+gap: 9px;
+
+}
+
+.current-user-name {
+
+color: #f9a8d4;
+font-size: 12px;
+font-weight: bold;
+
+}
+
+.logout-btn {
+
+border: none;
+background:
+    rgba(244,63,94,0.12);
+color: #fda4af;
+padding: 9px 11px;
+border-radius: 10px;
+font-size: 11px;
+cursor: pointer;
+border:
+    1px solid
+    rgba(244,63,94,0.15);
+
+}
+
+.logout-btn:hover {
+
+background:
+    rgba(244,63,94,0.22);
+
+}
+
+/* ==================================================
+MESSAGES
+IMPORTANT :
+Compatible avec le chat.js actuel
+================================================== */
+
+.messages {
+
+flex: 1;
+overflow-y: auto;
+padding:
+    20px 13px;
+display: flex;
+flex-direction: column;
+gap: 13px;
+scroll-behavior: smooth;
+
+}
+
+.messages::-webkit-scrollbar {
+width: 4px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+
+background:
+    rgba(244,114,182,0.25);
+border-radius: 10px;
+
+}
+
+/* ==================================================
+BULLES
+================================================== */
+
+/*
+Ton chat.js actuel crée directement :
+
+   <div class="message me">
+   <div class="message other">
+
+Donc on utilise .message.me
+et .message.other directement.
+*/
+
+.message {
+
+display: block;
+width: fit-content;
+max-width: 82%;
+padding:
+    11px 15px;
+border-radius: 19px;
+word-break: break-word;
+white-space: pre-wrap;
+line-height: 1.45;
+font-size: 15px;
+animation:
+    messageAppear 0.3s ease;
+box-shadow:
+    0 5px 18px
+    rgba(0,0,0,0.20);
+
+}
+
+@keyframes messageAppear {
+
+from {
+    opacity: 0;
+    transform:
+        translateY(10px)
+        scale(0.96);
+}
+to {
+    opacity: 1;
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+}
+
+/* ==================================================
+MES MESSAGES → DROITE
+================================================== */
+
+.message.me {
+
+align-self: flex-end;
+margin-left: auto;
+background:
+    linear-gradient(
+        135deg,
+        #ec4899,
+        #db2777
+    );
+color: white;
+border-bottom-right-radius: 5px;
+box-shadow:
+    0 5px 18px
+    rgba(236,72,153,0.25);
+
+}
+
+/* ==================================================
+MESSAGES DE L’AUTRE → GAUCHE
+================================================== */
+
+.message.other {
+
+align-self: flex-start;
+margin-right: auto;
+background:
+    linear-gradient(
+        135deg,
+        #38223b,
+        #2b1830
+    );
+color: #fce7f3;
+border-bottom-left-radius: 5px;
+border:
+    1px solid
+    rgba(244,114,182,0.09);
+
+}
+
+/* ==================================================
+CHARGEMENT
+================================================== */
+
+.loading-messages {
+
+margin: auto;
+text-align: center;
+color: #9f7ca2;
+font-size: 13px;
+
+}
+
+.loading-heart {
+
+font-size: 28px;
+color: #ec4899;
+margin-bottom: 8px;
+animation:
+    heartbeat 1.4s infinite;
+
+}
+
+/* ==================================================
+ZONE DE SAISIE
+================================================== */
+
+.message-box {
+
+width: 100%;
+display: flex;
+align-items: center;
+gap: 9px;
+padding:
+    10px 12px;
+padding-bottom:
+    calc(
+        10px +
+        env(safe-area-inset-bottom)
+    );
+background:
+    rgba(29, 11, 32, 0.96);
+border-top:
+    1px solid
+    rgba(244,114,182,0.10);
+backdrop-filter:
+    blur(15px);
+
+}
+
+.message-box input {
+
+flex: 1;
+min-width: 0;
+padding:
+    13px 17px;
+border:
+    1px solid
+    rgba(244,114,182,0.16);
+border-radius: 25px;
+outline: none;
+background:
+    rgba(10,5,13,0.65);
+color: white;
+font-size: 15px;
+
+}
+
+.message-box input::placeholder {
+color: #806580;
+}
+
+.message-box input:focus {
+
+border-color:
+    rgba(236,72,153,0.55);
+box-shadow:
+    0 0 0 3px
+    rgba(236,72,153,0.08);
+
+}
+
+.message-box button {
+
+width: 46px;
+height: 46px;
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+border: none;
+border-radius: 50%;
+background:
+    linear-gradient(
+        135deg,
+        #ec4899,
+        #e11d48
+    );
+color: white;
+font-size: 20px;
+cursor: pointer;
+box-shadow:
+    0 6px 20px
+    rgba(236,72,153,0.25);
+transition: 0.2s;
+
+}
+
+.message-box button:hover {
+
+transform:
+    scale(1.07);
+box-shadow:
+    0 8px 25px
+    rgba(236,72,153,0.35);
+
+}
+
+.message-box button:active {
+
+transform:
+    scale(0.92);
+
+}
+
+.message-box button:disabled {
+
+opacity: 0.5;
+cursor: not-allowed;
+
+}
+
+/* ==================================================
+MOBILE
+================================================== */
+
+@media (max-width: 600px) {
+
+.login-card {
+    padding:
+        30px 20px;
+    border-radius: 24px;
+}
+.current-user-name {
+    display: none;
+}
+.chat-header {
+    padding:
+        10px 11px;
+}
+.chat-heart {
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+}
+.couple-header h2 {
+    font-size: 14px;
+}
+.logout-btn {
+    padding:
+        8px 9px;
+    font-size: 10px;
+}
+.messages {
+    padding:
+        15px 9px;
+}
+.message {
+    max-width: 84%;
+    font-size: 15px;
+}
+
 }
