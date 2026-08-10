@@ -4,8 +4,13 @@ const sendBtn = document.getElementById("sendBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
 let currentUser = null;
+let replyToMessage = null;
 
+function selectMessageForReply(message) {
 
+    startReply(message);
+
+}
 // ===============================
 // UTILISATEUR CONNECTÉ
 // ===============================
@@ -37,6 +42,9 @@ function displayMessage(message) {
 
     div.classList.add("message");
 
+div.addEventListener("click", () => {
+    selectMessageForReply(message);
+});
     const messageEmail = (message.user_email || "")
         .trim()
         .toLowerCase();
@@ -63,13 +71,61 @@ function displayMessage(message) {
 
     }
 
-    div.textContent =
-    message.message +
-    "\n" +
-    new Date(message.created_at).toLocaleTimeString("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit"
-    });
+  // ===============================
+// CONTENU DE LA BULLE
+// ===============================
+
+if (message.reply_to_text) {
+
+    const replyBox = document.createElement("div");
+    replyBox.className = "reply-preview";
+
+    replyBox.textContent = message.reply_to_text;
+
+    div.appendChild(replyBox);
+}
+
+const textBox = document.createElement("div");
+textBox.className = "message-text";
+textBox.textContent = message.message;
+
+div.appendChild(textBox);
+
+const time = document.createElement("div");
+time.className = "message-time";
+
+time.textContent = new Date(
+    message.created_at
+).toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit"
+});
+
+div.appendChild(time);
+// Appui long sur mobile pour répondre
+let pressTimer;
+
+div.addEventListener("touchstart", function () {
+
+    pressTimer = setTimeout(function () {
+
+        startReply(message);
+
+    }, 600);
+
+});
+
+div.addEventListener("touchend", function () {
+
+    clearTimeout(pressTimer);
+
+});
+
+div.addEventListener("touchmove", function () {
+
+    clearTimeout(pressTimer);
+
+});
     messagesContainer.appendChild(div);
 
     messagesContainer.scrollTop =
@@ -113,7 +169,6 @@ async function loadMessages() {
 // ===============================
 // ENVOYER UN MESSAGE
 // ===============================
-
 async function sendMessage() {
 
     const text = messageInput.value.trim();
@@ -121,15 +176,11 @@ async function sendMessage() {
     if (!text) return;
 
     if (!currentUser) {
-
         await getCurrentUser();
-
     }
 
     if (!currentUser) {
-
         console.error("Utilisateur non connecté");
-
         return;
     }
 
@@ -137,22 +188,35 @@ async function sendMessage() {
         .from("messages")
         .insert({
             user_email: currentUser.email,
-            message: text
+            message: text,
+            reply_to_text: replyToMessage
+    ? replyToMessage.message
+    : null
         });
 
     if (error) {
-
         console.error(
             "Erreur envoi du message :",
             error
         );
-
         return;
     }
 
     messageInput.value = "";
 
-    messageInput.focus();
+replyToMessage = null;
+
+const replyBox =
+    document.getElementById("replyBox");
+
+if (replyBox) {
+    replyBox.style.display = "none";
+}
+
+messageInput.placeholder =
+    "Écris-moi quelque chose... ❤️";
+
+messageInput.focus();
 }
 
 
@@ -229,6 +293,77 @@ logoutBtn.addEventListener(
     }
 );
 
+// ===============================
+// RÉPONDRE À UN MESSAGE
+// ===============================
+
+function startReply(message) {
+
+    replyToMessage = message;
+
+    let replyBox = document.getElementById("replyBox");
+
+    if (!replyBox) {
+
+        replyBox = document.createElement("div");
+
+        replyBox.id = "replyBox";
+
+        replyBox.innerHTML = `
+            <div class="reply-preview">
+                <strong id="replyUser"></strong>
+                <div id="replyText"></div>
+            </div>
+
+            <button id="cancelReply" type="button">
+                ×
+            </button>
+        `;
+
+        const messageBox =
+            document.querySelector(".message-box");
+
+        messageBox.parentNode.insertBefore(
+            replyBox,
+            messageBox
+        );
+
+        document
+            .getElementById("cancelReply")
+            .addEventListener("click", cancelReply);
+    }
+
+    document.getElementById("replyUser").textContent =
+        message.user_email === "lalita@gmail.com"
+            ? "LALITA"
+            : "SIPOUEH";
+
+    document.getElementById("replyText").textContent =
+        message.message;
+
+    replyBox.style.display = "flex";
+
+    messageInput.focus();
+}
+
+
+// ===============================
+// ANNULER LA RÉPONSE
+// ===============================
+
+function cancelReply() {
+
+    replyToMessage = null;
+
+    const replyBox =
+        document.getElementById("replyBox");
+
+    if (replyBox) {
+        replyBox.style.display = "none";
+    }
+
+    messageInput.focus();
+}
 
 // ===============================
 // DÉMARRAGE
