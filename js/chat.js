@@ -13,6 +13,95 @@ let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
 // ===============================
+// SONS DU CHAT
+// ===============================
+function playSendSound() {
+    try {
+        const audioContext =
+            new (window.AudioContext ||
+            window.webkitAudioContext)();
+        const oscillator =
+            audioContext.createOscillator();
+        const gain =
+            audioContext.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(
+            900,
+            audioContext.currentTime
+        );
+        oscillator.frequency.exponentialRampToValueAtTime(
+            1300,
+            audioContext.currentTime + 0.08
+        );
+        gain.gain.setValueAtTime(
+            0.001,
+            audioContext.currentTime
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            0.15,
+            audioContext.currentTime + 0.01
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioContext.currentTime + 0.12
+        );
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start();
+        oscillator.stop(
+            audioContext.currentTime + 0.12
+        );
+    } catch (error) {
+        console.log(
+            "Son d'envoi indisponible :",
+            error
+        );
+    }
+}
+function playReceiveSound() {
+    try {
+        const audioContext =
+            new (window.AudioContext ||
+            window.webkitAudioContext)();
+        const oscillator =
+            audioContext.createOscillator();
+        const gain =
+            audioContext.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(
+            650,
+            audioContext.currentTime
+        );
+        oscillator.frequency.setValueAtTime(
+            850,
+            audioContext.currentTime + 0.08
+        );
+        gain.gain.setValueAtTime(
+            0.001,
+            audioContext.currentTime
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            0.18,
+            audioContext.currentTime + 0.01
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioContext.currentTime + 0.18
+        );
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+        oscillator.start();
+        oscillator.stop(
+            audioContext.currentTime + 0.18
+        );
+    } catch (error) {
+        console.log(
+            "Son de réception indisponible :",
+            error
+        );
+    }
+}
+// ===============================
 // UTILISATEUR CONNECTÉ
 // ===============================
 async function getCurrentUser() {
@@ -326,7 +415,7 @@ async function displayMessage(message) {
         time
     );
     // ===============================
-    // ACCUSÉ DE RÉCEPTION
+    // ACCUSÉ
     // ===============================
     if (
         messageEmail === currentEmail
@@ -489,6 +578,8 @@ async function sendMessage() {
         );
         return;
     }
+    // SON D'ENVOI
+    playSendSound();
     messageInput.value =
         "";
     clearReply();
@@ -544,7 +635,7 @@ if (
     );
 }
 // ===============================
-// SÉLECTION PHOTO / VIDÉO
+// PHOTO / VIDÉO
 // ===============================
 if (photoInput) {
     photoInput.addEventListener(
@@ -562,10 +653,6 @@ if (photoInput) {
                 );
                 return;
             }
-            console.log(
-                "Photo/Vidéo sélectionnée :",
-                file.name
-            );
             const fileName =
                 Date.now() +
                 "_" +
@@ -631,6 +718,8 @@ if (photoInput) {
                     "";
                 return;
             }
+            // SON D'ENVOI
+            playSendSound();
             photoInput.value =
                 "";
             clearReply();
@@ -639,7 +728,7 @@ if (photoInput) {
     );
 }
 // ===============================
-// SÉLECTION ET ENVOI DU MÉDIA
+// AUTRES FICHIERS
 // ===============================
 if (mediaInput) {
     mediaInput.addEventListener(
@@ -722,6 +811,8 @@ if (mediaInput) {
                     "";
                 return;
             }
+            // SON D'ENVOI
+            playSendSound();
             mediaInput.value =
                 "";
             clearReply();
@@ -751,6 +842,28 @@ supabaseClient
             await displayMessage(
                 payload.new
             );
+            const incomingEmail =
+                (
+                    payload.new.user_email ||
+                    ""
+                )
+                .trim()
+                .toLowerCase();
+            const myEmail =
+                (
+                    currentUser?.email ||
+                    ""
+                )
+                .trim()
+                .toLowerCase();
+            // ===============================
+            // SON RÉCEPTION
+            // ===============================
+            if (
+                incomingEmail !== myEmail
+            ) {
+                playReceiveSound();
+            }
         }
     )
     .subscribe();
@@ -1091,6 +1204,8 @@ async function sendVoiceMessage(
         );
         return;
     }
+    // SON D'ENVOI
+    playSendSound();
     clearReply();
     console.log(
         "Message vocal envoyé avec succès."
@@ -1150,7 +1265,7 @@ async function deleteMessage(message) {
     }
     // ===============================
     // SUPPRIMER LA BULLE
-    // SANS RECHARGER LA PAGE
+    // SANS RECHARGER
     // ===============================
     const messageElement =
         messagesContainer.querySelector(
